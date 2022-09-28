@@ -3,6 +3,22 @@ const {AuthenticationError} = require('apollo-server-express');
 const {signToken} = require('../utils/auth');
 
 const resolvers = {
+    Query: {
+        // context = req
+        me: async (_, args, context) => {
+            if (context.user) {
+                const {email} = context.user;
+
+                const data = await User.findOne({email})
+                .select('-__v -password');
+                // populate book list later
+
+                return data;
+            };
+
+            throw new AuthenticationError('You need to be logged in to view this page.');
+        }
+    },
     Mutation: {
         login: async (_, args) => {
             console.log('mutation: login');
