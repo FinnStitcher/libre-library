@@ -5,7 +5,7 @@ const {signToken} = require('../utils/auth');
 const resolvers = {
     Query: {
         // context = req
-        me: async (_, args, context) => {
+        me: async (_, __, context) => {
             if (context.user) {
                 const {email} = context.user;
 
@@ -46,6 +46,22 @@ const resolvers = {
             
             const token = signToken(user);
             return {token, user};
+        },
+
+        saveBook: async (_, args, context) => {
+            console.log('mutation: saveBook');
+            
+            // getting _id from context
+            const {_id} = context.user;
+            const {bookData} = args;
+
+            const user = await User.findOneAndUpdate(
+                {_id},
+                {$addToSet: {savedBooks: bookData}},
+                {new: true}
+            );
+
+            return user;
         }
     }
 };
