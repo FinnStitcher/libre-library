@@ -62,7 +62,7 @@ const resolvers = {
                     {new: true}
                 );
 
-                return user;                
+                return user;
             }
             
             throw new AuthenticationError('You need to be logged in to save books.');
