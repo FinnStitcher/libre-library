@@ -50,18 +50,41 @@ const resolvers = {
 
         saveBook: async (_, args, context) => {
             console.log('mutation: saveBook');
+
+            if (context.user) {
+                // getting _id from context
+                const {_id} = context.user;
+                const {bookData} = args;
+
+                const user = await User.findOneAndUpdate(
+                    {_id},
+                    {$addToSet: {savedBooks: bookData}},
+                    {new: true}
+                );
+
+                return user;                
+            }
             
-            // getting _id from context
-            const {_id} = context.user;
-            const {bookData} = args;
+            throw new AuthenticationError('You need to be logged in to save books.');
+        },
 
-            const user = await User.findOneAndUpdate(
-                {_id},
-                {$addToSet: {savedBooks: bookData}},
-                {new: true}
-            );
+        removeBook: async (_, args, context) => {
+            console.log('mutation: removeBook');
 
-            return user;
+            if (context.user) {
+                const {_id} = context.user;
+                const {bookId} = args;
+
+                const user = await User.findOneAndUpdate(
+                    {_id},
+                    {$pull: {savedBooks: {bookId}}},
+                    {new: true}
+                );
+
+                return user;
+            }
+
+            throw new AuthenticationError('You need to be logged in to view this page.');
         }
     }
 };
