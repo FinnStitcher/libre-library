@@ -13,6 +13,19 @@ mutation login($email: String!, $password: String!) {
 }
 `;
 
+export const ADD_USER = gql`
+mutation addUser($username: String!, $email: String!, $password: String!) {
+    addUser(username: $username, email: $email, password: $password) {
+        token
+        user {
+            _id
+            username
+            email
+        }
+    }
+}
+`;
+
 // the only place where SAVE_BOOK is called doesn't really need the data
 export const SAVE_BOOK = gql`
 mutation saveBook($bookData: BookData!) {
