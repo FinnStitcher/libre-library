@@ -42,6 +42,7 @@ const SearchBooks = () => {
         title: book.volumeInfo.title,
         description: book.volumeInfo.description,
         image: book.volumeInfo.imageLinks?.thumbnail || '',
+        link: book.volumeInfo.infoLink
       }));
 
       setSearchedBooks(bookData);
@@ -75,19 +76,6 @@ const SearchBooks = () => {
     } catch (err) {
         console.error(err);
     }
-
-    // try {
-    //   const response = await saveBook(bookToSave, token);
-
-    //   if (!response.ok) {
-    //     throw new Error('something went wrong!');
-    //   }
-
-    //   // if book successfully saves to user's account, save book id to state
-    //   setSavedBookIds([...savedBookIds, bookToSave.bookId]);
-    // } catch (err) {
-    //   console.error(err);
-    // }
   };
 
   return (
@@ -134,6 +122,9 @@ const SearchBooks = () => {
                   <Card.Title>{book.title}</Card.Title>
                   <p className='small'>Authors: {book.authors}</p>
                   <Card.Text>{book.description}</Card.Text>
+                  <p>
+                    <a href={book.link}>View on Google Books</a>
+                </p>
                   {Auth.loggedIn() && (
                     <Button
                       disabled={bookIdArr?.some((savedBookId) => savedBookId === book.bookId)}
